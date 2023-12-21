@@ -1,6 +1,6 @@
 
 
-<article class="py-8" itemscope itemtype="http://schema.org/BlogPosting>
+<article class="py-8" itemscope itemtype="http://schema.org/BlogPosting">
     {% for block in section.blocks %}
         {% case block.type %}
             {% when 'article_title' %}
@@ -14,8 +14,16 @@
                 <div class="flex items-center justify-center">
                     <div class="text-center max-w-7xl" itemscope itemtype="http://schema.org/Person">
                         {% if section.settings.enable_author %}
-                            <small itemprop="author">{{ article.author }}</small>
+                             <small itemprop="author">{{ article.author }}</small> 
+    
+    
                         {% endif %}
+
+
+
+
+
+
                     </div>
                 </div>
             {% when 'article_published_date' %}
@@ -65,7 +73,7 @@
                     {% endfor %}
 
                     <div class="max-w-6xl mx-auto">
-                        {% render 'pagination', pagination: paginate %}
+                        {% render 'pagination', pagination : paginate %}
                     </div>
                 {% endpaginate %}
             </div>
@@ -149,7 +157,7 @@
                 <div class="px-1 mb-3 md:flex">
                     <div class="px-3 md:w-full">
                         <input type="submit" class="w-full px-4 py-2 text-base font-medium text-white bg-gray-900 border cursor-pointer hover:bg-gray-500" value="Post comment">
-                    </div>
+                    </div>content
                 </div>
 
             </div>     
@@ -158,7 +166,33 @@
 {% endif %}
 
 
-
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": {{ article.title | json }},
+    "articleBody": {{ article.content | strip_html | json }},
+    "url": {{ blog.url | strip_html | json }},
+    {% if article.excerpt != blank %}
+        "description": {{ article.excerpt | strip_html | json }},
+    {% endif %}
+    {% if article.image %}
+        "image": [
+            {{ article.image | img_url: "medium" | prepend: 'https:' | json }} 
+        ],
+    {% endif %}
+    "datePublished": {{ article.published_at | date: format: "default" | json }},
+    "dateCreated": {{ article.created_at | date: format: "default" | json }},
+    "author": {
+        "@type": "Person",
+        "name": {{ article.author | json }}
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": {{ shop.name | json }}
+    }
+}
+</script>
 
 
 
